@@ -1,23 +1,66 @@
 import sys
 
-# things = [];
+def load_input(filename):
+    input_map = []
+    header = []
+    querys = []
 
-global things
-things = [1111100000], [1111000000], [1110000011], [0x111100111], [0x011111111]
+    with open(filename, "r") as f:
+        line = f.readline().strip()
+        header = line.split(" ")
+        rows = int(header[0])
+        for i in range(rows):
+            input_map.append(f.readline().strip())
 
-def find_friends(howMany):
-    r = things[howMany]
-    return r
+        number_of_querys = int(f.readline().strip())
+
+        for i in range(number_of_querys):
+            querys.append(f.readline().strip())
+
+    complete_array = [header, list(input_map), querys]
+
+    return complete_array
+
+def run_querys(input_matrix, querys):
+    result = ""
+    for query in querys:
+        query_list = query.split(" ")
+        from_row = int(query_list[0]) - 1
+        from_col = int(query_list[1]) - 1
+        to_row = int(query_list[2]) - 1
+        to_col = int(query_list[3]) - 1
+
+        try:
+            from_value = int(input_matrix[from_row][from_col])
+            to_value = int(input_matrix[to_row][to_col])
+        except IndexError:
+            result += "neither, out of bounds\n"
+            continue
+
+        print(f"From Row: {input_matrix[from_row]}")
+        print(f"To Row:   {input_matrix[to_row]}")
+        print(f"From {from_row, from_col} / To {to_row, to_col} / Vals {from_value, to_value}")
+
+        if s := from_value == to_value and from_value == 1:
+            result += "decimal\n"
+        elif s := from_value == to_value and from_value == 0:
+            result += "binary\n"
+        else:
+            result += "neither\n"
+
+    return result
 
 def main():
     args = sys.argv[1:]
 
     if len(args) >= 0:
-        howMany =  int(args[0])
-        result = find_friends(howMany)
-        print(f"Result is {result}")
+        filename =  args[0]
+        input_matrix = load_input(filename)
+        q = run_querys(input_matrix[1], input_matrix[2])
+        print(f"Input: {input_matrix[1]}")
+        print(f"Output: {q}")
     else:
-        print ("Specity just one variable, if none, how many?")
+        print ("No arguments")
 
 
 if __name__ == "__main__":
