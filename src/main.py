@@ -1,56 +1,68 @@
 import sys
 
-def load_input(filename):
+def load_input():
     input_map = []
-    header = []
     querys = []
 
-    with open(filename, "r") as f:
-        line = f.readline().strip()
-        header = line.split(" ")
-        rows = int(header[0])
-        for i in range(rows):
-            if i > 1000:
-                print("To many input lines")
-                exit(1)
+    headers_for_data = sys.stdin.readline()
 
-            line = f.readline().strip()
-            if len(line) > 1000:
-                print("To big input line")
-                exit(1)
+    numbers_of_data_rows = hedaers_for_data[0]
+    numbers_of_data_columns = hedaers_for_data[1]
 
-            input_map.append(line)
+    # if j > 1000:
+    #     print("To many input colums")
+    #     exit(1)
 
+    # if len(data_line[]) > 1000:
+    #     print("To big input line")
+    #     exit(1)
 
-        number_of_querys = int(f.readline().strip())
+    for (i in range(0, number_of_data_lines)):
+        input_map.append(sys.stdin.readline(data_line))
 
-        for i in range(number_of_querys):
-            querys.append(f.readline().strip())
+    headers_for_querys = sys.stdin.readline()
+    number_of_querys = headers_for_querys[0]
 
-    complete_array = [header, list(input_map), querys]
+    for i in range(number_of_querys):
+        querys.append(f.readline().strip())
+
+    complete_array = [input_map, querys]
 
     return complete_array
 
 def run_querys(input_matrix, querys):
     result = ""
+    column_count = len(input_matrix[0])
+    row_count = len(input_matrix)
+
+    result += f"Input Matrix: {input_matrix}\n"
+    # result += f"Column count of matrix {column_count}\n"
+    # result += f"Row count of matrix {row_count}\n"
+
+
     for query in querys:
         query_list = query.split(" ")
-        from_row = int(query_list[0]) - 1 # zero indexed.
-        from_col = int(query_list[1]) - 1 # zero indexed.
-        to_row = int(query_list[2]) - 1 # zero indexed.
-        to_col = int(query_list[3]) - 1 # zero indexed.
+        from_row = int(query_list[0]) - 1
+        from_col = int(query_list[1]) - 1
+        to_row = int(query_list[2]) - 1
+        to_col = int(query_list[3]) - 1
 
+    
+        result += f"From Row: {input_matrix[from_row]}, Query: {query_list[0]} {query_list[1]} {query_list[2]} {query_list[3]}\n"
+        result += f"To Row:   {input_matrix[to_row]}\n"
+    
+        result += f"column count {column_count}, row count {row_count}\n"
+
+        diagonal_slope = column_count / row_count
+
+        result += f"diagonal slope {diagonal_slope}\n"
+    
         # Check that query doesn't move diagonal
-
-        # print(f"From Row: {input_matrix[from_row]}")
-        # print(f"To Row:   {input_matrix[to_row]}")
-        # print(f"From {from_row + 1, from_col + 1} / To {to_row + 1, to_col + 1}")
-
         try:
-            slope = ((to_col + 1) - (from_col + 1)) / ((to_row + 1) - (from_row + 1))
-            # print(f"Slope: {slope}")
-            if abs(slope) == 1:
-                result += "neither"
+            slope = abs( ((to_col ) - (from_col)) / ((to_row) - (from_row)) )
+            result += f"Slope: {slope}, to col {to_col}, from col {from_col}, to row {to_row} from row {from_row}\n"
+            if abs(slope) == diagonal_slope:
+                result += "neither\n"
                 continue
         except ZeroDivisionError:
             # Not a diagonal
@@ -65,7 +77,7 @@ def run_querys(input_matrix, querys):
             result += "neither, out of bounds\n"
             continue
 
-        # print(f"From {from_row, from_col} / To {to_row, to_col} / Vals {from_value, to_value}")
+        result += f"Divided by {from_row, from_col} / To {to_row, to_col} / Vals {from_value, to_value}\n"
 
         if s := from_value == to_value and from_value == 1:
             result += "decimal\n"
@@ -75,19 +87,39 @@ def run_querys(input_matrix, querys):
             result += "neither\n"
 
     return result
+f
+
+def load_input():
+    result = ""
+    input_map = []
+    querys = []
+
+    import sys
+
+    for line in sys.stdin:
+        header = line.split(" ")
+        rows = int(header[0])
+        for i in range(rows):
+            if i > 1000:
+                result = "To many input lines"
+                exit(1)
+
+            line = f.readline().strip()
+            if len(line) > 1000:
+                result = "To big input line"
+                exit(1)
+
+            input_map.append(line)
+
+    return result
+
 
 def main():
-    args = sys.argv[1:]
-
-    if len(args) >= 0:
-        filename =  args[0]
-        input_matrix = load_input(filename)
-        q = run_querys(input_matrix[1], input_matrix[2])
-        # print(f"Input: {input_matrix[1]}")
-        print(f"{q}")
-    else:
-        print ("No arguments")
-
+    complete_array = load_input()
+    result = run_querys(complete_array)
+    print(result)ertdghsdf
 
 if __name__ == "__main__":
     main()
+
+
