@@ -17,21 +17,9 @@ def run_querys(input_matrix, querys):
         to_col = int(query_list[3]) - 1
 
     
-        debug += f"From Row: {input_matrix[from_row]}, To Row: {input_matrix[to_row]}, Query: {query_list[0]} {query_list[1]} {query_list[2]} {query_list[3]}\n"
+        debug += f"\nFrom Row: {input_matrix[from_row]}, To Row: {input_matrix[to_row]}, Query: {from_row}, {from_col} to {to_row},{to_col}\n"
     
         diagonal_slope = column_count / row_count
-
-   
-        # Check that query doesn't move diagonal
-        try:
-            slope = abs( ((to_col ) - (from_col)) / ((to_row) - (from_row)) )
-            debug += f"Slope: {slope}, from {from_col}, {from_row} to {to_col}, {to_row}, \n"
-            if abs(slope) == diagonal_slope:
-                result += "neither\n"
-                continue
-        except ZeroDivisionError:
-            debug += "Not a diagonal\n"
-            pass
 
         try:
             from_value = int(input_matrix[from_row][from_col])
@@ -39,6 +27,19 @@ def run_querys(input_matrix, querys):
         except IndexError:
             debug += "neither, out of bounds\n"
             continue
+   
+        # Check that query doesn't move diagonal
+        try:
+            slope = abs(to_col - from_col) / abs(to_row - from_row)
+            debug += f"Slope: {slope}, from {from_col}, {from_row} to {to_col}, {to_row}, from value {from_value}, to value {to_value}\n"
+            if abs(slope) == diagonal_slope:
+                debug += "neither, diagonal\n"
+                result += "neither\n"
+                continue
+        except ZeroDivisionError:
+            debug += "Not a diagonal\n"
+            pass
+
 
         if s := from_value == to_value and from_value == 1:
             result += "decimal\n"
